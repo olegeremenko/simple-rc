@@ -13,10 +13,14 @@ const createServer = (): WebSocket.Server => {
 const serverHandler = async (webSocket: WebSocket) => {
     webSocket.send(GREETING_MESSAGE);
     webSocket.on('message', async (message: string) => {
-        const command = await resolveCommand(message.toString());
-        const response = command ? await doAction(command) : '';
+        try {
+            const command = await resolveCommand(message.toString());
+            const response = command ? await doAction(command) : '';
+            webSocket.send(response);
+        } catch (e) {
+            webSocket.send('Error: ' + e.toString());
+        }
 
-        webSocket.send(response);
     });
 }
 

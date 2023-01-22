@@ -2,6 +2,7 @@ import {Command} from "./command-resolver";
 import {getMousePosition, moveMouseDown, moveMouseLeft, moveMouseRight, moveMouseUp} from "./mouse-control-actions";
 import {drawCircle, drawRectangle} from "./draw-actions";
 import {getScreenRegion} from "./screen-actions";
+import CommandExecureError from "./Errors/command-execute-error";
 
 enum Commands {
     MOUSE_POSITION = 'mouse_position',
@@ -28,36 +29,40 @@ const doAction = async (command: Command): Promise<string> => {
     const firstParam = getFirstParamAsNumber(command);
     const secondParam = getSecondParamAsNumber(command);
 
-    switch (command.cmd) {
-        case Commands.MOUSE_POSITION:
-            response = await getMousePosition();
-            break;
-        case Commands.MOUSE_UP:
-            await moveMouseUp(firstParam);
-            break;
-        case Commands.MOUSE_DOWN:
-            await moveMouseDown(firstParam);
-            break;
-        case Commands.MOUSE_LEFT:
-            await moveMouseLeft(firstParam);
-            break;
-        case Commands.MOUSE_RIGHT:
-            await moveMouseRight(firstParam);
-            break;
+    try {
+        switch (command.cmd) {
+            case Commands.MOUSE_POSITION:
+                response = await getMousePosition();
+                break;
+            case Commands.MOUSE_UP:
+                await moveMouseUp(firstParam);
+                break;
+            case Commands.MOUSE_DOWN:
+                await moveMouseDown(firstParam);
+                break;
+            case Commands.MOUSE_LEFT:
+                await moveMouseLeft(firstParam);
+                break;
+            case Commands.MOUSE_RIGHT:
+                await moveMouseRight(firstParam);
+                break;
 
-        case Commands.DRAW_CIRCLE:
-            await drawCircle(firstParam);
-            break;
-        case Commands.DRAW_RECTANGLE:
-            await drawRectangle(firstParam, secondParam);
-            break;
-        case Commands.DRAW_SQUARE:
-            await drawRectangle(firstParam, firstParam);
-            break;
+            case Commands.DRAW_CIRCLE:
+                await drawCircle(firstParam);
+                break;
+            case Commands.DRAW_RECTANGLE:
+                await drawRectangle(firstParam, secondParam);
+                break;
+            case Commands.DRAW_SQUARE:
+                await drawRectangle(firstParam, firstParam);
+                break;
 
-        case Commands.PRINT_SCREEN:
-            response = Commands.PRINT_SCREEN + ' ' + (await getScreenRegion());
-            break;
+            case Commands.PRINT_SCREEN:
+                response = Commands.PRINT_SCREEN + ' ' + (await getScreenRegion());
+                break;
+        }
+    } catch (e) {
+        throw new CommandExecureError('Failed to execute ' + command.cmd);
     }
 
     return response;
