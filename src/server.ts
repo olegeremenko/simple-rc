@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws';
 import {resolveCommand} from "./command-resolver";
 import doAction from "./action-controller";
+import {createWebSocketStream} from "ws";
 
 const GREETING_MESSAGE = 'Welcome!';
 
@@ -12,7 +13,13 @@ const createServer = (): WebSocket.Server => {
 
 const serverHandler = async (webSocket: WebSocket) => {
     webSocket.send(GREETING_MESSAGE);
-    webSocket.on('message', async (message: string) => {
+
+    const wedSocketStream = createWebSocketStream(webSocket, {
+        decodeStrings: false,
+        defaultEncoding: 'utf8'
+    });
+
+    wedSocketStream.on('data', async (message: string) => {
         try {
             const command = await resolveCommand(message.toString());
             const response = command ? await doAction(command) : '';
@@ -20,13 +27,16 @@ const serverHandler = async (webSocket: WebSocket) => {
         } catch (e) {
             webSocket.send('Error: ' + e.toString());
         }
-
     });
 }
 
 const startServer = (): void => {
     const webSocketServer = createServer();
     webSocketServer.on('connection', serverHandler);
+    process.on('SIGINT', () => {
+        webSocketServer.close();
+        process.exit(0);
+    });
 }
 
 export default startServer;
