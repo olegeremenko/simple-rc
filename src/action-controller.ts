@@ -1,6 +1,7 @@
 import {Command} from "./command-resolver";
 import {getMousePosition, moveMouseDown, moveMouseLeft, moveMouseRight, moveMouseUp} from "./mouse-control-actions";
 import {drawCircle, drawRectangle} from "./draw-actions";
+import {getScreenRegion} from "./screen-actions";
 
 enum Commands {
     MOUSE_POSITION = 'mouse_position',
@@ -25,7 +26,7 @@ const getSecondParamAsNumber = (command: Command): number => {
 const doAction = async (command: Command): Promise<string> => {
     let response: string = command.cmd;
     const firstParam = getFirstParamAsNumber(command);
-    const secondParam = getFirstParamAsNumber(command);
+    const secondParam = getSecondParamAsNumber(command);
 
     switch (command.cmd) {
         case Commands.MOUSE_POSITION:
@@ -52,6 +53,10 @@ const doAction = async (command: Command): Promise<string> => {
             break;
         case Commands.DRAW_SQUARE:
             await drawRectangle(firstParam, firstParam);
+            break;
+
+        case Commands.PRINT_SCREEN:
+            response = Commands.PRINT_SCREEN + ' ' + (await getScreenRegion());
             break;
     }
 
