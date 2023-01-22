@@ -24,8 +24,9 @@ const serverHandler = async (webSocket: WebSocket) => {
             const command = await resolveCommand(message.toString());
             const response = command ? await doAction(command) : '';
             webSocket.send(response);
-        } catch (e) {
-            webSocket.send('Error: ' + e.toString());
+        } catch (error) {
+            const errorMessage = (error as Error).toString();
+            webSocket.send('Error: ' + errorMessage);
         }
     });
 }
