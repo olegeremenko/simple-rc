@@ -1,0 +1,38 @@
+{
+  "name": "simple-rc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.ts",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "nodemon"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "@nut-tree/nut-js": "^3.0.0",
+    "@types/ws": "^8.5.4",
+    "dotenv": "^16.0.3",
+    "jimp": "^0.16.2",
+    "ws": "^8.12.0"
+  },
+  "optionalDependencies": {
+    "utf-8-validate": "^6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olegeremenko/simple-rc.git"
+  },
+  "author": "Oleg Eryomenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olegeremenko/simple-rc/issues"
+  },
+  "homepage": "https://github.com/olegeremenko/simple-rc#readme"
+}
